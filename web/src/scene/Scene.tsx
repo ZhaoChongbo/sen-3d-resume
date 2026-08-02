@@ -19,8 +19,9 @@ const NODE_LINE = 0.3 // 节点"终点"参考线：条目顶部到达视口该�
 // 上下渐变背景球（包裹相机），两端颜色可调
 function GradientBackground() {
   // glb 相机视角很窄(~23°)，只看到渐变中间一条；陡度把可见窄带拉伸出完整过渡
-  const top = '#6f906f'
-  const bottom = '#dbd3b5'
+  // 深色版：压暗两端，让浅米色文字（#f4f1ea）有足够对比度，人物也更突出
+  const top = '#1f2e24'
+  const bottom = '#4a4434'
   const steep = 1.4
 
   const uniforms = useMemo(
@@ -134,7 +135,7 @@ function Man2({
   }
 
   const eye = {
-    enabled: true,
+    enabled: false, // 新人物贴图自带眼睛，关闭原模型眼球跟随，避免浮动眼珠
     gain: 3,
     maxYaw: 15,
     maxPitch: 8,
@@ -275,6 +276,38 @@ function Man2({
   const anchorEls = useRef<any>(null)
   // 作品区画廊 DOM 元素（决定作品入场 / 横移阶段的帧）
   const galleryEl = useRef<any>(null)
+  // 缓存 DOM 测量（resize/一次首帧更新，渲染循环只读 —— 避免每帧 getBoundingClientRect 强制布局回流）
+  const layout = useRef({ tops: [] as number[], heroScroll: 1, galleryTop: Infinity, galleryRange: 0 })
+  useEffect(() => {
+    const measure = () => {
+      if (!anchorEls.current) {
+        anchorEls.current = POINTS.map((n) => document.querySelector(`[data-point="${n}"]`))
+      }
+      const els = anchorEls.current
+      if (els && els.length === M && els.every(Boolean)) {
+        const tops = els.map((el: any) => el.getBoundingClientRect().top + window.scrollY)
+        layout.current.tops = tops
+        layout.current.heroScroll = Math.max(1, tops[0] - window.innerHeight * NODE_LINE)
+      }
+      if (!galleryEl.current) galleryEl.current = document.querySelector('.wk-gallery')
+      if (galleryEl.current) {
+        layout.current.galleryTop = galleryEl.current.getBoundingClientRect().top
+        layout.current.galleryRange = Math.max(0, galleryEl.current.offsetHeight - window.innerHeight)
+      }
+    }
+    // 首帧 + 尺寸变化后重新测量（内容可能因动画/字体加载而变高）
+    measure()
+    window.addEventListener('resize', measure, { passive: true })
+    // 滚动过程不重测：锚点相对文档位置固定，scrollY 在渲染循环里现读（廉价），
+    // 只有入场动画/字体加载可能改变内容高度，用延时补测兜底
+    const t1 = setTimeout(measure, 500)
+    const t2 = setTimeout(measure, 1500)
+    return () => {
+      window.removeEventListener('resize', measure)
+      clearTimeout(t1)
+      clearTimeout(t2)
+    }
+  }, [])
 
   // 复用对象，避免每帧分配
   const frameSmooth = useRef(0)
@@ -295,12 +328,10 @@ function Man2({
 
   useFrame((_, dt) => {
     const a = 1 - Math.pow(cam.damping, dt)
-
-    // 1) 由履历锚点（文档坐标）算连续索引 s：
-    //    顶部 s≈-1，sysu 居中 s=0，hotsar=1 … zooop=4
-    if (!anchorEls.current) {
-      anchorEls.current = POINTS.map((n) => document.querySelector(`[data-point="${n}"]`))
-    }
+    // 每帧用事件缓存的测量值刷新一次（廉价：只是读两个数字；元素引用已缓存）
+    const L = layout.current
+    if (!anchorEls.current) anchorEls.current = POINTS.map((n) => document.querySelector(`[data-point="${n}"]`))
+    if (!galleryEl.current) galleryEl.current = document.querySelector('.wk-gallery')
     const els = anchorEls.current
     // 节点停顿：对每段滚动做停顿重映射——靠近某节点的一段滚动里 s 保持不变（停顿），
     // 段中部快速过渡到下一节点。只改"滚动→s"的节奏，glb 动画仍是 s 的线性函数。
@@ -312,13 +343,13 @@ function Man2({
       return THREE.MathUtils.smoothstep((t - d) / (1 - 2 * d), 0, 1)
     }
     let sTarget = THREE.MathUtils.clamp(frameSmooth.current / FRAMES_PER_NODE - 1, -1, M - 1)
-    if (els && els.length === M && els.every(Boolean)) {
+    if (els && els.length === M && els.every(Boolean) && L.tops.length === M) {
       // 参考线在视口 NODE_LINE 高度；锚点用条目顶部（文字位置，不含底部大 padding）
       const refLine = window.scrollY + window.innerHeight * NODE_LINE
-      const tops = els.map((el: any) => el.getBoundingClientRect().top + window.scrollY)
+      const tops = L.tops
       if (refLine <= tops[0]) {
         // 顶部 → sysu 的渐入段：scrollY=0 时 s=-1（第 0 帧），sysu 到达参考线时 s=0
-        const heroScroll = Math.max(1, tops[0] - window.innerHeight * NODE_LINE)
+        const heroScroll = L.heroScroll
         sTarget = -1 + dwell(THREE.MathUtils.clamp(window.scrollY / heroScroll, 0, 1))
       } else if (refLine >= tops[M - 1]) {
         sTarget = M - 1
@@ -337,11 +368,10 @@ function Man2({
     //    履历区 0–RESUME_FRAMES（节点 i→(i+1)·50）；作品区 = 入场（屏幕滑入）+ 首板块横移，直到末帧
     let frameTarget = THREE.MathUtils.clamp((sTarget + 1) * FRAMES_PER_NODE, 0, RESUME_FRAMES)
     let inWorks = false
-    if (!galleryEl.current) galleryEl.current = document.querySelector('.wk-gallery')
     if (galleryEl.current) {
       const ih = window.innerHeight
-      const rectTop = galleryEl.current.getBoundingClientRect().top
-      const range = Math.max(0, galleryEl.current.offsetHeight - ih)
+      const rectTop = L.galleryTop
+      const range = L.galleryRange
       if (rectTop < ih) {
         inWorks = true
         // 入场段结束帧（作品屏幕完全覆盖时）：履历末尾 + 入场帧数，钳到总帧
@@ -516,13 +546,13 @@ function Post2({
   dofRangeRef: MutableRefObject<number>
 }) {
   const post = {
-    bloomIntensity: 0.6,
-    bloomThreshold: 0.82,
+    bloomIntensity: 0.45,
+    bloomThreshold: 0.85,
     dof: true,
-    startBokeh: 7.4,
-    startRange: 2.0,
-    focusBokeh: 11.0,
-    focusRange: 0.15,
+    startBokeh: 3.2,
+    startRange: 3.5,
+    focusBokeh: 4.5,
+    focusRange: 0.9,
     startBlendFrame: 48,
     endBlendFrame: RESUME_FRAMES - 50, // 末节点附近回到"起始帧"景深档（原 250−50=200）
   }

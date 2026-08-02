@@ -93,9 +93,10 @@ canvas {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start; /* 文字左对齐，避开中央 3D 人物 */
   /* 标题正文略下移 */
   padding-bottom: 6vh;
+  padding-left: clamp(20px, 6.5vw, 110px);
 }
 
 /* 首屏底部渐变底色（滚动后由 framer 控制淡出） */
@@ -113,6 +114,7 @@ canvas {
 
 .scroll-cue {
   margin-top: 3vh;
+  align-self: center; /* 滚动提示保持水平居中 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,35 +267,102 @@ canvas {
   }
 }
 
-/* ---------- About 叠层（标题 Rancho + 正文 Cormorant Upright） ---------- */
+/* ---------- About 叠层（左对齐 + 毛玻璃底板，避开中央人物） ---------- */
 .about {
-  text-align: center;
+  text-align: left;
   pointer-events: none;
-  padding: 0 24px;
+  padding: 0;
+  max-width: min(680px, 94vw);
 }
-/* 入场动画放内层：其 fill:both 只锁内层 opacity，不影响外层滚动 opacity */
+
+/* 首页文字直接浮在 3D 场景上：不设背景/边框（用户要求不要黑色面板遮挡人物）。
+   可读性靠各文字元素的 text-shadow 与深色渐变背景保证 */
 .about-intro {
   animation: fadeDown 1.8s ease both;
 }
 
 .about-title {
-  font-family: 'Mansalva', cursive;
-  font-weight: 400;
-  font-size: clamp(30px, 7.2vw, 80px);
-  line-height: 1;
-  letter-spacing: 0.01em;
+  /* 主标题：系统粗黑体 + 锐利硬投影（不用大模糊阴影，避免光晕糊感） */
+  font-family: 'Chiron GoRound TC', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(38px, 6.6vw, 84px);
+  line-height: 1.08;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin-bottom: 0.24em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+}
+
+.about-subtitle {
+  margin: 0 0 0.9em;
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: clamp(12px, 1.5vw, 17px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: #ffd9b3;
+  text-shadow: 0 1px 6px rgba(6, 10, 14, 0.7);
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.5em;
+  margin: 0.8em auto 0;
+}
+
+.about-tag {
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: clamp(10px, 1.05vw, 13px);
+  letter-spacing: 0.08em;
   color: var(--ink);
-  margin-bottom: 0.3em;
+  padding: 0.35em 0.9em;
+  border: 1px solid rgba(244, 241, 234, 0.35);
+  border-radius: 999px;
+  background: rgba(8, 12, 18, 0.6);
+  box-shadow: 0 1px 4px rgba(6, 10, 14, 0.4);
+}
+
+.about-stats {
+  display: flex;
+  justify-content: flex-start;
+  gap: clamp(1.4em, 4vw, 3.4em);
+  margin: 1.3em 0 0;
+}
+
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28em;
+}
+
+.about-stat-value {
+  font-family: 'Cormorant Upright', 'Chiron GoRound TC', serif;
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 600;
+  line-height: 1;
+  color: #ffd9b3;
+  text-shadow: 0 1px 8px rgba(6, 10, 14, 0.8);
+}
+
+.about-stat-label {
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: clamp(9px, 0.95vw, 12px);
+  letter-spacing: 0.14em;
+  color: rgba(244, 241, 234, 0.78);
+  text-shadow: 0 1px 4px rgba(6, 10, 14, 0.6);
 }
 
 .about-body {
-  margin: 0.5em auto 0;
+  margin: 0.6em 0 0;
   max-width: min(660px, 88vw);
   font-family: 'Cormorant Upright', 'Chiron GoRound TC', 'PingFang SC', 'Microsoft YaHei', serif;
   font-weight: 500;
-  font-size: clamp(8px, 1.05vw, 16px);
-  line-height: 1.2;
+  font-size: clamp(11px, 1.35vw, 19px);
+  line-height: 1.35;
   color: var(--ink);
+  text-shadow: 0 1px 6px rgba(6, 10, 14, 0.65);
 }
 
 /* 正文内 ZOOOP 链接：容器是 pointer-events:none，链接需单独开启可点 */
@@ -314,8 +383,8 @@ canvas {
 .about[lang='zh'] .about-body {
   font-family: 'Chiron GoRound TC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-weight: 400;
-  font-size: clamp(8.8px, 0.92vw, 12.8px);
-  line-height: 1.7;
+  font-size: clamp(11.5px, 1.25vw, 17px);
+  line-height: 1.75;
   letter-spacing: 0.02em;
 }
 
@@ -414,12 +483,6 @@ canvas {
   margin-bottom: 0.6em;
 }
 
-.tl-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .tl-place {
   font-size: clamp(18px, 2.4vw, 26px);
   font-weight: 600;
@@ -452,6 +515,232 @@ canvas {
   color: rgba(244, 241, 234, 0.8);
 }
 
+/* 能力 / 时间分配：水平进度条 */
+.tl-meter {
+  margin-top: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+}
+
+.tl-meter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tl-meter-label {
+  flex: none;
+  width: 8.5em;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  color: rgba(244, 241, 234, 0.95);
+}
+
+.tl-meter-track {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(244, 241, 234, 0.12);
+  overflow: hidden;
+}
+
+.tl-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.tl-meter-value {
+  flex: none;
+  width: 3.2em;
+  text-align: right;
+  font-family: 'Helvetica Neue', system-ui, sans-serif;
+  font-size: 13px;
+  color: rgba(244, 241, 234, 0.85);
+}
+
+/* 游戏成就：紧凑卡片 */
+.tl-achievements {
+  margin-top: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+
+.tl-ach {
+  padding: 0.55em 0.9em;
+  border: 1px solid rgba(244, 241, 234, 0.16);
+  border-radius: 10px;
+  background: rgba(8, 12, 18, 0.32);
+}
+
+.tl-ach-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8em;
+  flex-wrap: wrap;
+}
+
+.tl-ach-name {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tl-ach-meta {
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #ffd9b3;
+}
+
+.tl-ach-desc {
+  margin-top: 0.35em;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(244, 241, 234, 0.82);
+}
+
+/* 座右铭 */
+.tl-motto {
+  margin: 1.2em 0 0;
+  padding: 0.7em 1.1em;
+  border-left: 3px solid #ffd9b3;
+  font-family: 'Cormorant Upright', 'Chiron GoRound TC', 'PingFang SC', serif;
+  font-size: clamp(17px, 2vw, 22px);
+  letter-spacing: 0.14em;
+  color: #ffd9b3;
+  background: rgba(8, 12, 18, 0.3);
+}
+
+/* 第一部分：证件照（圆形头像 + 说明） */
+.tl-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.tl-portrait {
+  flex: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.tl-portrait img {
+  width: clamp(72px, 8vw, 104px);
+  height: clamp(72px, 8vw, 104px);
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 217, 179, 0.55);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.05);
+}
+
+.tl-portrait figcaption {
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(244, 241, 234, 0.6);
+  text-align: center;
+}
+
+/* 第五部分：照片墙（统一比例 + 圆角） */
+.tl-photos {
+  margin-top: 1.3em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9em;
+}
+
+.tl-photo {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(244, 241, 234, 0.16);
+  background: rgba(8, 12, 18, 0.4);
+}
+
+.tl-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4; /* 原图是 3:4 竖构图，保持比例不裁切 */
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tl-photo:hover img {
+  transform: scale(1.04);
+}
+
+.tl-photo figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 0.5em 0.8em 0.55em;
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: linear-gradient(to top, rgba(6, 10, 14, 0.85), rgba(6, 10, 14, 0));
+}
+
+/* 第五部分：兴趣标签胶囊 */
+.tl-tags {
+  margin-top: 1.2em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.tl-tag {
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: rgba(244, 241, 234, 0.95);
+  padding: 0.32em 0.85em;
+  border: 1px solid rgba(244, 241, 234, 0.22);
+  border-radius: 999px;
+  background: rgba(8, 12, 18, 0.35);
+}
+
+/* 第五部分：阅读 / 影视 / 音乐 分类行（名称固定宽，内容对齐） */
+.tl-collections {
+  margin-top: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+}
+
+.tl-collection {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9em;
+}
+
+.tl-collection-name {
+  flex: none;
+  width: 3.4em;
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #ffd9b3;
+  text-align: right;
+}
+
+.tl-collection-items {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(244, 241, 234, 0.92);
+}
+
 .tl-points {
   margin-top: 1.1em;
   list-style: none;
@@ -479,11 +768,37 @@ canvas {
   margin-top: 1.8em;
 }
 
+/* 第二部分：经历卡片 + 时间徽标（左侧竖线连接成时间轴） */
+.tl-group {
+  position: relative;
+  padding-left: 0;
+}
+
+.tl-group-time {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  padding: 0.18em 0.8em;
+  font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #ffd9b3;
+  border: 1px solid rgba(255, 217, 179, 0.45);
+  border-radius: 999px;
+  background: rgba(8, 12, 18, 0.35);
+}
+
 .tl-group-head {
   display: flex;
   align-items: center;
   gap: 0.6em;
   flex-wrap: wrap;
+}
+
+.tl-group-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22em;
   font-size: clamp(15px, 1.9vw, 19px);
   font-weight: 600;
   color: var(--ink);
@@ -544,24 +859,6 @@ canvas {
   border-color: rgba(244, 241, 234, 0.4);
   background: rgba(244, 241, 234, 0.06);
   transform: translateY(-2px);
-}
-
-/* ZOOOP 动态 logo */
-.zooop-logo-link {
-  pointer-events: auto;
-  display: inline-flex;
-  color: var(--ink);
-  transition: color 0.2s ease;
-}
-
-.zooop-logo-link:hover {
-  color: #ffd9b3;
-}
-
-.zooop-logo {
-  display: block;
-  height: 20.8px;
-  width: auto;
 }
 
 /* 中文履历：行距放宽一点更耐读 */

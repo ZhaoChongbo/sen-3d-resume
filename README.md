@@ -1,14 +1,10 @@
-# About Sen · 3D个人简历
+# About 赵崇铂 · 3D 数据分析师简历
 
 **简体中文** · [English](README.en.md)
 
-一个基于 **React Three Fiber** 的滚动式个人3D简历。
+一个基于 **React Three Fiber** 的滚动式个人3D简历（fork 自 [dayinji/sen-3d-resume](https://github.com/dayinji/sen-3d-resume)，内容已替换为本人简历）。
 
-<h3 align="center">
-  🔗 <a href="https://dayinji.github.io/sen-3d-resume/">点击进入在线预览 →</a>
-</h3>
-
-> 💡 **不想写代码、不想折腾环境？** 可以试试 [intro3d.com](https://intro3d.com)：一个零代码的 3D 个人主页 DIY 平台，小白也能上手，一站式解决制作与部署。相比本项目少了「眼球跟随光标」的互动，其余相对完整。想快速拥有一个类似的 3D 简历，它更省时；想完全掌控、深度定制，再用本仓库源码。
+> 💡 想要更简化的同类效果，可以试试 [intro3d.com](https://intro3d.com)：零代码 3D 个人主页平台。想完全掌控、深度定制，直接用本仓库源码。
 
 ## 开源说明（先读这段）
 
