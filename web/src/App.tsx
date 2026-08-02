@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import * as THREE from 'three'
@@ -8,32 +8,6 @@ import Resume from './ui/Resume'
 import Works from './ui/Works'
 import LoadingScreen from './ui/LoadingScreen'
 import { useStore } from './store'
-
-// ---- 运行时能力检测（一次性，决定 3D 是否可渲染 / 是否降级） ----
-// WebGL2：three r163+ 只支持 WebGL2。微信安卓内置浏览器（X5 内核）常不支持 WebGL2，
-//        直接导致黑屏 —— 检测失败时渲染静态渐变背景，页面内容仍完整可用。
-function detectWebGL2(): boolean {
-  try {
-    const c = document.createElement('canvas')
-    const gl = c.getContext('webgl2')
-    // 拿到上下文后释放（防止 Canvas 持有 GPU 资源）
-    if (gl) {
-      ;(gl as WebGL2RenderingContext).getExtension('WEBGL_lose_context')?.loseContext()
-      return true
-    }
-    return false
-  } catch {
-    return false
-  }
-}
-// 移动端 / 微信内：关闭后处理与阴影，降低 GPU 负载与崩溃概率
-function detectLowEnd(): boolean {
-  try {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
-  } catch {
-    return false
-  }
-}
 
 function Backdrop() {
   // 点击空白处收起详情
@@ -159,35 +133,26 @@ export default function App() {
   // 首屏装饰画框/角标：滚动后淡出
   const heroChromeOpacity = useTransform(scrollY, [0, 280], [1, 0])
 
-  // 运行时能力检测（结果固定不变）
-  const webgl2 = useMemo(() => detectWebGL2(), [])
-  const lowEnd = useMemo(() => detectLowEnd(), [])
-
   return (
     <>
-      {/* 加载遮罩：模型全部加载完成前覆盖全屏，完成后淡出。
-          ⚠️ 仅 WebGL2 可用时渲染 —— 否则 useProgress 永不完成，遮罩会永远挡住页面 */}
-      {webgl2 && <LoadingScreen />}
+      {/* 加载遮罩：模型全部加载完成前覆盖全屏，完成后淡出 */}
+      <LoadingScreen />
 
-      {/* 固定的 3D 背景；WebGL2 不可用时降级为静态渐变背景（微信安卓 X5 内核黑屏的兜底） */}
-      {webgl2 ? (
-        <div className="scene-bg">
-          <Canvas
-            shadows={lowEnd ? false : { type: THREE.PCFShadowMap }}
-            dpr={lowEnd ? [1, 1] : [1, 1.5]}
-            camera={{ position: [0, 5, 19], fov: 39, near: 0.1, far: 500 }}
-            gl={{ antialias: false, stencil: false, depth: true, toneMapping: THREE.ACESFilmicToneMapping }}
-          >
-            <color attach="background" args={['#0a0e16']} />
-            <Suspense fallback={null}>
-              <Backdrop />
-              <Scene lowEnd={lowEnd} />
-            </Suspense>
-          </Canvas>
-        </div>
-      ) : (
-        <div className="scene-bg scene-bg-static" aria-hidden="true" />
-      )}
+      {/* 固定的 3D 背景 */}
+      <div className="scene-bg">
+        <Canvas
+          shadows={{ type: THREE.PCFShadowMap }}
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 5, 19], fov: 39, near: 0.1, far: 500 }}
+          gl={{ antialias: false, stencil: false, depth: true, toneMapping: THREE.ACESFilmicToneMapping }}
+        >
+          <color attach="background" args={['#0a0e16']} />
+          <Suspense fallback={null}>
+            <Backdrop />
+            <Scene />
+          </Suspense>
+        </Canvas>
+      </div>
 
       {/* 滚动渐暗蒙层 */}
       <motion.div className="scrim" style={{ opacity: scrimOpacity }} aria-hidden="true" />

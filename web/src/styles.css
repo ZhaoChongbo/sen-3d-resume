@@ -6,37 +6,6 @@
   font-family: 'Helvetica Neue', 'Chiron GoRound TC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 }
 
-/* ---------- 本地字体（自托管，零外网依赖；中文回退系统字体） ---------- */
-@font-face {
-  font-family: 'Mansalva';
-  src: url('/fonts/mansalva-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Cormorant Upright';
-  src: url('/fonts/cormorant-upright-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Cormorant Upright';
-  src: url('/fonts/cormorant-upright-500.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Cormorant Upright';
-  src: url('/fonts/cormorant-upright-600.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* 全局样式 */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -79,16 +48,6 @@ canvas {
 .scene-bg canvas {
   width: 100% !important;
   height: 100% !important;
-}
-
-/* WebGL2 不可用时的静态兜底背景（微信安卓 X5 内核黑屏降级）：
-   深色渐变 + 微光晕，保证文字/内容在任何环境下可读 */
-.scene-bg-static {
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 45% at 50% 42%, rgba(74, 91, 74, 0.5), transparent 70%),
-    linear-gradient(160deg, #1f2e24 0%, #0a0e16 55%, #3a3526 130%);
 }
 
 .scrim {

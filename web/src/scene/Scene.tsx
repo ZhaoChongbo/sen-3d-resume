@@ -602,9 +602,7 @@ function Post2({
 }
 
 // 场景根组件：展示 me.glb（相机由 glb 动画 + 滚动驱动）
-// lowEnd（移动端/微信内）：关闭 DepthOfField/Bloom/SMAA 后处理 —— 这些 shader 在手机 GPU
-// 上负载高、且部分内核编译失败会整屏黑掉；关闭后视觉差异小但稳定性大幅提升。
-export default function Scene({ lowEnd = false }: { lowEnd?: boolean }) {
+export default function Scene() {
   const focusRef = useRef(new THREE.Vector3(0, 1.3, 0))
   const frameRef = useRef(0)
   // 逐锚点景深（intro3d 导出的 glb 携带）：Man2 每帧写、Post2 读。dofBokeh=-1 表示无参数 → Post2 走旧全局混合。
@@ -619,9 +617,7 @@ export default function Scene({ lowEnd = false }: { lowEnd?: boolean }) {
         <Man2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
       </Suspense>
 
-      {!lowEnd && (
-        <Post2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
-      )}
+      <Post2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
     </>
   )
 }
