@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+  <defs>
+    <radialGradient id="glow" cx="30%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#22301f"/>
+      <stop offset="60%" stop-color="#11161a"/>
+      <stop offset="100%" stop-color="#0b0e13"/>
+    </radialGradient>
+    <linearGradient id="spark" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6f906f"/>
+      <stop offset="55%" stop-color="#dbd3b5"/>
+      <stop offset="100%" stop-color="#ffd9b3"/>
+    </linearGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6f906f" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#6f906f" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="700" fill="url(#glow)"/>
+
+  <!-- 网格 -->
+  <g stroke="#f4f1ea" stroke-opacity="0.05" stroke-width="1">
+    <path d="M0 175 H1600"/><path d="M0 350 H1600"/><path d="M0 525 H1600"/>
+    <path d="M400 0 V700"/><path d="M800 0 V700"/><path d="M1200 0 V700"/>
+  </g>
+
+  <!-- 节点网络 -->
+  <g stroke="#f4f1ea" stroke-opacity="0.12" stroke-width="1.2" fill="none">
+    <line x1="120" y1="180" x2="300" y2="260"/>
+    <line x1="300" y1="260" x2="540" y2="200"/>
+    <line x1="540" y1="200" x2="660" y2="360"/>
+    <line x1="300" y1="260" x2="240" y2="460"/>
+    <line x1="240" y1="460" x2="500" y2="500"/>
+    <line x1="500" y1="500" x2="660" y2="360"/>
+    <line x1="540" y1="200" x2="600" y2="110"/>
+  </g>
+  <g fill="#f4f1ea">
+    <circle cx="120" cy="180" r="4" fill-opacity="0.5"/>
+    <circle cx="300" cy="260" r="5"/>
+    <circle cx="540" cy="200" r="4"/>
+    <circle cx="660" cy="360" r="6" fill="#ffd9b3"/>
+    <circle cx="240" cy="460" r="4" fill-opacity="0.6"/>
+    <circle cx="500" cy="500" r="5"/>
+    <circle cx="600" cy="110" r="3" fill-opacity="0.45"/>
+  </g>
+
+  <!-- 上升折线（贯穿） -->
+  <path d="M140 560 L320 480 L470 505 L640 380 L810 415 L960 300 L1140 330 L1300 220 L1470 250" fill="none" stroke="url(#spark)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M140 560 L320 480 L470 505 L640 380 L810 415 L960 300 L1140 330 L1300 220 L1470 250 L1470 700 L140 700 Z" fill="url(#fill)"/>
+  <g fill="#ffd9b3">
+    <circle cx="320" cy="480" r="5"/>
+    <circle cx="640" cy="380" r="5.5"/>
+    <circle cx="960" cy="300" r="6"/>
+    <circle cx="1300" cy="220" r="6.5"/>
+    <circle cx="1470" cy="250" r="7"/>
+  </g>
+
+  <!-- 统计标签 -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="15" letter-spacing="1">
+    <text x="1470" y="230" text-anchor="end" fill="#ffd9b3">AUC 0.9465</text>
+    <text x="960" y="284" text-anchor="end" fill="#dbd3b5">ATE +6.76pp</text>
+    <text x="640" y="364" text-anchor="end" fill="#6f906f">OR 2.53</text>
+  </g>
+
+  <!-- 幽灵文字 -->
+  <text x="1590" y="640" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="180" font-weight="700" fill="#f4f1ea" fill-opacity="0.05">RECSYS</text>
+
+  <!-- 发丝框 -->
+  <rect x="30" y="30" width="1540" height="640" fill="none" stroke="#f4f1ea" stroke-opacity="0.16" stroke-width="1"/>
+  <g stroke="#f4f1ea" stroke-opacity="0.6" stroke-width="2">
+    <path d="M30 58 L58 30"/><path d="M1570 58 L1542 30"/>
+    <path d="M30 642 L58 670"/><path d="M1570 642 L1542 670"/>
+  </g>
+
+  <rect width="1600" height="700" filter="url(#grain)"/>
+</svg>

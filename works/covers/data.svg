@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="38%" r="75%">
+      <stop offset="0%" stop-color="#21301f"/>
+      <stop offset="55%" stop-color="#12171a"/>
+      <stop offset="100%" stop-color="#0b0e13"/>
+    </radialGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6f906f" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#6f906f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6f906f"/>
+      <stop offset="60%" stop-color="#dbd3b5"/>
+      <stop offset="100%" stop-color="#ffd9b3"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+    </filter>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="1200" fill="url(#glow)"/>
+
+  <!-- 网络节点与连线 -->
+  <g stroke="#f4f1ea" stroke-opacity="0.10" stroke-width="1.2" fill="none">
+    <line x1="120" y1="250" x2="300" y2="330"/>
+    <line x1="300" y1="330" x2="560" y2="260"/>
+    <line x1="560" y1="260" x2="720" y2="420"/>
+    <line x1="300" y1="330" x2="250" y2="560"/>
+    <line x1="250" y1="560" x2="520" y2="620"/>
+    <line x1="520" y1="620" x2="720" y2="420"/>
+    <line x1="560" y1="260" x2="640" y2="180"/>
+    <line x1="520" y1="620" x2="330" y2="780"/>
+    <line x1="520" y1="620" x2="700" y2="760"/>
+  </g>
+  <g fill="#f4f1ea">
+    <circle cx="120" cy="250" r="4" fill-opacity="0.5"/>
+    <circle cx="300" cy="330" r="5"/>
+    <circle cx="560" cy="260" r="4"/>
+    <circle cx="720" cy="420" r="6" fill="#ffd9b3"/>
+    <circle cx="250" cy="560" r="4" fill-opacity="0.6"/>
+    <circle cx="520" cy="620" r="6"/>
+    <circle cx="640" cy="180" r="3" fill-opacity="0.45"/>
+    <circle cx="330" cy="780" r="4" fill="#6f906f"/>
+    <circle cx="700" cy="760" r="3" fill-opacity="0.5"/>
+  </g>
+
+  <!-- 上升折线与面积 -->
+  <path d="M150 820 L260 750 L380 780 L490 660 L620 690 L740 560" fill="none" stroke="url(#line)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M150 820 L260 750 L380 780 L490 660 L620 690 L740 560 L740 1050 L150 1050 Z" fill="url(#area)"/>
+  <g fill="#ffd9b3">
+    <circle cx="260" cy="750" r="4.5"/>
+    <circle cx="490" cy="660" r="5.5"/>
+    <circle cx="740" cy="560" r="6"/>
+  </g>
+
+  <!-- 数据条 -->
+  <g fill="#f4f1ea" fill-opacity="0.14">
+    <rect x="120" y="930" width="26" height="120"/>
+    <rect x="180" y="880" width="26" height="170"/>
+    <rect x="240" y="1010" width="26" height="40"/>
+    <rect x="300" y="860" width="26" height="190"/>
+    <rect x="360" y="950" width="26" height="100"/>
+    <rect x="420" y="820" width="26" height="230"/>
+  </g>
+
+  <!-- 幽灵编号 -->
+  <text x="760" y="1090" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="300" font-weight="700" fill="#f4f1ea" fill-opacity="0.055">01</text>
+
+  <!-- 发丝框 -->
+  <rect x="36" y="36" width="828" height="1128" fill="none" stroke="#f4f1ea" stroke-opacity="0.16" stroke-width="1"/>
+  <g stroke="#f4f1ea" stroke-opacity="0.6" stroke-width="2">
+    <path d="M36 68 L68 36"/><path d="M864 68 L832 36"/>
+    <path d="M36 1132 L68 1164"/><path d="M864 1132 L832 1164"/>
+  </g>
+
+  <!-- 胶片噪点 -->
+  <rect width="900" height="1200" filter="url(#grain)"/>
+</svg>

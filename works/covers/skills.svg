@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="36%" r="76%">
+      <stop offset="0%" stop-color="#2a2118"/>
+      <stop offset="55%" stop-color="#13161b"/>
+      <stop offset="100%" stop-color="#0b0e13"/>
+    </radialGradient>
+    <linearGradient id="term" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#161c22"/>
+      <stop offset="100%" stop-color="#0e1217"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+    </filter>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="1200" fill="url(#glow)"/>
+
+  <!-- 雷达同心环 -->
+  <g transform="translate(450 520)" fill="none">
+    <circle r="340" stroke="#f4f1ea" stroke-opacity="0.08" stroke-width="1"/>
+    <circle r="256" stroke="#f4f1ea" stroke-opacity="0.14" stroke-width="1"/>
+    <circle r="172" stroke="#f4f1ea" stroke-opacity="0.22" stroke-width="1"/>
+    <circle r="88" stroke="#f4f1ea" stroke-opacity="0.32" stroke-width="1"/>
+    <g stroke="#f4f1ea" stroke-opacity="0.12" stroke-width="1">
+      <line x1="0" y1="-340" x2="0" y2="340"/>
+      <line x1="-340" y1="0" x2="340" y2="0"/>
+      <line x1="-240" y1="-240" x2="240" y2="240"/>
+      <line x1="240" y1="-240" x2="-240" y2="240"/>
+    </g>
+    <!-- 六维数据多边形 -->
+    <polygon points="0,-300 260,-150 210,230 -210,230 -260,-150" fill="#6f906f" fill-opacity="0.14" stroke="#6f906f" stroke-opacity="0.75" stroke-width="1.6"/>
+    <polygon points="0,-210 180,-90 140,160 -140,160 -180,-90" fill="#ffd9b3" fill-opacity="0.08" stroke="#ffd9b3" stroke-opacity="0.55" stroke-width="1.2"/>
+    <circle cx="0" cy="-300" r="5" fill="#ffd9b3"/>
+    <circle cx="260" cy="-150" r="5" fill="#ffd9b3"/>
+    <circle cx="210" cy="230" r="5" fill="#ffd9b3"/>
+    <circle cx="-210" cy="230" r="5" fill="#ffd9b3"/>
+    <circle cx="-260" cy="-150" r="5" fill="#ffd9b3"/>
+  </g>
+
+  <!-- 终端窗口 -->
+  <g transform="translate(120 160)">
+    <rect width="300" height="240" rx="10" fill="url(#term)" stroke="#f4f1ea" stroke-opacity="0.25" stroke-width="1.2"/>
+    <circle cx="26" cy="24" r="5" fill="#ff6b5e" fill-opacity="0.85"/>
+    <circle cx="50" cy="24" r="5" fill="#f5c25d" fill-opacity="0.85"/>
+    <circle cx="74" cy="24" r="5" fill="#5ec77a" fill-opacity="0.85"/>
+    <line x1="16" y1="46" x2="284" y2="46" stroke="#f4f1ea" stroke-opacity="0.14" stroke-width="1"/>
+    <!-- 代码行 -->
+    <g>
+      <text x="22" y="80" font-family="ui-monospace, Menlo, monospace" font-size="15" fill="#6f906f">&gt; sql.query(2023)</text>
+      <rect x="22" y="100" width="150" height="8" rx="3" fill="#dbd3b5" fill-opacity="0.4"/>
+      <rect x="22" y="120" width="200" height="8" rx="3" fill="#f4f1ea" fill-opacity="0.22"/>
+      <rect x="22" y="140" width="120" height="8" rx="3" fill="#ffd9b3" fill-opacity="0.45"/>
+      <text x="22" y="176" font-family="ui-monospace, Menlo, monospace" font-size="15" fill="#ffd9b3">&gt; xgb.fit(train)</text>
+      <rect x="22" y="196" width="90" height="8" rx="3" fill="#6f906f" fill-opacity="0.6"/>
+    </g>
+  </g>
+
+  <!-- 幽灵编号 -->
+  <text x="760" y="1090" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="300" font-weight="700" fill="#f4f1ea" fill-opacity="0.055">03</text>
+
+  <!-- 发丝框 -->
+  <rect x="36" y="36" width="828" height="1128" fill="none" stroke="#f4f1ea" stroke-opacity="0.16" stroke-width="1"/>
+  <g stroke="#f4f1ea" stroke-opacity="0.6" stroke-width="2">
+    <path d="M36 68 L68 36"/><path d="M864 68 L832 36"/>
+    <path d="M36 1132 L68 1164"/><path d="M864 1132 L832 1164"/>
+  </g>
+
+  <rect width="900" height="1200" filter="url(#grain)"/>
+</svg>
